@@ -12,12 +12,11 @@
 
 void childProcessing(int childIndex, int palindromeIndex);
 void ctrlPlusC(int sig);
-int sF = 19;
 
 typedef struct PalInfo{							
     char pList[50][256];
     int turn;
-    enum state flag[sF];
+    enum state flag[19];
 } palInfo;
 
 
