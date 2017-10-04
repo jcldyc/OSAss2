@@ -127,7 +127,7 @@ int main(int argc, char *argv[]){
         //critical_section
         srand(time(NULL));
         int rN = rand()%3;
-        sleep(randomNumber);
+        sleep(rN);
 
         FILE * filePtr;
 
@@ -143,7 +143,7 @@ int main(int argc, char *argv[]){
 
   
         rN = rand()%3;
-        sleep(randomNumber);
+        sleep(rN);
 
         time(&timer);
         tm_info = localtime(&timer);
