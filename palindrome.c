@@ -10,6 +10,7 @@ int main(int argc, char *argv[]){
 		exit(1);
 	}
 	printf("%s", argv[1]);
+	isPalindrome(argv[1]);
 	
 	
 }
