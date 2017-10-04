@@ -30,7 +30,7 @@ int main(int argc, char *argv[]){
 	
 	int id;
     int pNum = atoi(argv[1]);;
-    int thisPalNum = atoi(argv[2]); 
+    int palindromeNum = atoi(argv[2]); 
     int key = 3699;
 	shmPtr = &shm;
 	
@@ -70,25 +70,25 @@ int main(int argc, char *argv[]){
     //code to enter critical section
     int j;
     int n = 19;
-    int thisPalNum;
+    int currentpalNum = palindromeNum;
     int isAPalindrome;
     
     for (int i = 0; i < 5; ++i){
         
-        char palString[256];
+        char possiblePalindrome[256];
 		
 
-        if (thisPalNum < 50){
-            strncpy(palString, shmPtr->pList[thisPalNum],256);
-            strtok(palString, "\n");
-            thisPalNum = thisPalNum + n;
+        if (currentpalNum < 50){
+            strncpy(possiblePalindrome, shmPtr->pList[currentpalNum],256);
+            strtok(possiblePalindrome, "\n");
+            currentpalNum = currentpalNum + n;
         }
         else{
             return 0;
         }
-/* 
+
         //check if it is a palindrome
-        if(isPalindrome(palString) != 0){
+        if(isPalindrome(possiblePalindrome) != 0){
             isAPalindrome = 1;
 
         }
@@ -96,7 +96,7 @@ int main(int argc, char *argv[]){
             isAPalindrome = 0;
         }
     
-        do{ */
+        do{
             
 			//Get's the time and outputs it when the  process is tyring to get into the CS
 			//reference:  https://www.tutorialspoint.com/c_standard_library/c_function_strftime.htm
@@ -152,14 +152,14 @@ int main(int argc, char *argv[]){
 
         FILE * filePtr;
 
-        if(isPalindrome(palString)){
+        if(isAPalindrome){
             filePtr = fopen("palin.out","a");
 
         }
         else{
             filePtr = fopen("nopalin.out","a");
         }
-        fprintf(filePtr, "%ld %d %s\n", (long)getpid(), thisPalNum-n+1, palString);
+        fprintf(filePtr, "%ld %d %s\n", (long)getpid(), currentpalNum-n+1, possiblePalindrome);
         fclose(filePtr);
 
   
