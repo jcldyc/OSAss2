@@ -103,7 +103,7 @@ int main(int argc, char *argv[]){
 			
 			
 			//printTime();
-            fprintf(stderr, "\t%s \t process: %d\twants to enter the critical section.\n",timeinfo, procNum);
+            fprintf(stderr, "\t%s \t process: %d\twants to enter the critical section.\n",asctime (timeinfo), procNum);
 
             shmPtr->flag[procNum] = want_in; // Raise my flag
             j = shmPtr->turn; // Set local variable
