@@ -29,8 +29,11 @@ palInfo *shmPtr;
 int main(int argc, char *argv[]){
 	
 	int id;
+    int pNum = atoi(argv[1]);;
+    int thisPalNum = atoi(argv[2]); 
     int key = 3699;
 	shmPtr = &shm;
+	
 
     if (signal(SIGUSR1, exitfunc) == SIG_ERR) {
         printf("SIGUSR1 error\n");
@@ -41,7 +44,13 @@ int main(int argc, char *argv[]){
         exit(1);
     }
     
-    //reserve space for struct and attach to pointer
+    
+	//Shared memory:   Set's the permissions with  the 0666 argument
+	// references:  
+	// https://www.youtube.com/watch?v=SMeDw2GDMsE
+	// http://users.cs.cf.ac.uk/Dave.Marshall/C/node27.html
+	// https://stackoverflow.com/questions/13334352/how-to-attach-an-array-of-strings-to-shared-memory-c
+	
     if ((id = shmget(key,sizeof(shm), IPC_CREAT | 0666)) < 0){
         perror("SHMGET");
         exit(1);
@@ -53,9 +62,7 @@ int main(int argc, char *argv[]){
     }
 
 
-    //Takes the arguments passed into ./palin and converts them from strings to ints
-    int procNum = atoi(argv[1]);;
-    int palNum = atoi(argv[2]); 
+    
 
     time_t timer;
     struct tm* tm_info;
@@ -63,28 +70,25 @@ int main(int argc, char *argv[]){
     //code to enter critical section
     int j;
     int n = 19;
-    int currentpalNum = palNum;
+    int thisPalNum;
     int isAPalindrome;
     
     for (int i = 0; i < 5; ++i){
         
-        char possiblePalindrome[256];
-        char startTime[26];
-        char endTime[26];
-        char wantInTime[26];
+        char palString[256];
 		
 
-        if (currentpalNum < 50){
-            strncpy(possiblePalindrome, shmPtr->pList[currentpalNum],256);
-            strtok(possiblePalindrome, "\n");
-            currentpalNum = currentpalNum + n;
+        if (thisPalNum < 50){
+            strncpy(palString, shmPtr->pList[thisPalNum],256);
+            strtok(palString, "\n");
+            thisPalNum = thisPalNum + n;
         }
         else{
             return 0;
         }
-
+/* 
         //check if it is a palindrome
-        if(isPalindrome(possiblePalindrome) != 0){
+        if(isPalindrome(palString) != 0){
             isAPalindrome = 1;
 
         }
@@ -92,7 +96,7 @@ int main(int argc, char *argv[]){
             isAPalindrome = 0;
         }
     
-        do{
+        do{ */
             
 			//Get's the time and outputs it when the  process is tyring to get into the CS
 			//reference:  https://www.tutorialspoint.com/c_standard_library/c_function_strftime.htm
@@ -105,29 +109,29 @@ int main(int argc, char *argv[]){
 			strftime(buffer,80,"%x - %I:%M:%S%p", info);
 			
 			//printTime();
-            fprintf(stderr, "\t| %s | \t process: %d\t | Trying to enter Critical Section |\n",buffer, procNum);
+            fprintf(stderr, "\t| %s | \t process: %d\t | Trying to enter Critical Section |\n",buffer, pNum);
 
-            shmPtr->flag[procNum] = want_in; // Raise my flag
+            shmPtr->flag[pNum] = want_in; // Raise my flag
             j = shmPtr->turn; // Set local variable
-            while ( j != procNum )                                            //while j != the process' constant
+            while ( j != pNum )                                            //while j != the process' constant
                 j = ( shmPtr->flag[j] != idle ) ? shmPtr->turn : ( j + 1 ) % n;         //if the current process whose turn it is idle set j to (j+1) %n
 
             // Declare intention to enter critical section
 
-            shmPtr->flag[procNum] = in_cs;
+            shmPtr->flag[pNum] = in_cs;
 
             // Check that no one else is in critical section
 
             for ( j = 0; j < n; j++ ){
-                if ( ( j != procNum ) && ( shmPtr->flag[j] == in_cs ) ){
+                if ( ( j != pNum ) && ( shmPtr->flag[j] == in_cs ) ){
                     break;
                 }
             }
-        } while (( j < n ) || ( shmPtr->turn != procNum && shmPtr->flag[shmPtr->turn] != idle ));
+        } while (( j < n ) || ( shmPtr->turn != pNum && shmPtr->flag[shmPtr->turn] != idle ));
 
         // Assign turn to self and enter critical section
 
-        shmPtr->turn = procNum;      
+        shmPtr->turn = pNum;      
 
 		//Get's the time and outputs it when the  process is entering CS
 		//reference:  https://www.tutorialspoint.com/c_standard_library/c_function_strftime.htm
@@ -139,7 +143,7 @@ int main(int argc, char *argv[]){
 		info1 = localtime( &rawtime1 );
 		strftime(buffer1,80,"%x - %I:%M:%S%p", info1);
 		
-        fprintf(stderr, "\t| %s | \t process: %d\t | BEGIN Critical Section |\n", buffer1, procNum);
+        fprintf(stderr, "\t| %s | \t process: %d\t | BEGIN Critical Section |\n", buffer1, pNum);
 
         //critical_section
         srand(time(NULL));
@@ -148,14 +152,14 @@ int main(int argc, char *argv[]){
 
         FILE * filePtr;
 
-        if(isAPalindrome){
+        if(isPalindrome(palString)){
             filePtr = fopen("palin.out","a");
 
         }
         else{
             filePtr = fopen("nopalin.out","a");
         }
-        fprintf(filePtr, "%ld %d %s\n", (long)getpid(), currentpalNum-n+1, possiblePalindrome);
+        fprintf(filePtr, "%ld %d %s\n", (long)getpid(), thisPalNum-n+1, palString);
         fclose(filePtr);
 
   
@@ -171,7 +175,7 @@ int main(int argc, char *argv[]){
 		time( &rawtime2 );
 		info2 = localtime( &rawtime2 );
 		strftime(buffer2,80,"%x - %I:%M:%S%p", info2);
-        fprintf(stderr, "\t| %s | \t process: %d\t | LEAVE Critical Section |\n", buffer2, procNum);
+        fprintf(stderr, "\t| %s | \t process: %d\t | LEAVE Critical Section |\n", buffer2, pNum);
 	
       
         j = (shmPtr->turn + 1) % n;
@@ -179,7 +183,7 @@ int main(int argc, char *argv[]){
             j = (j + 1) % n;
 
         shmPtr->turn = j;
-        shmPtr->flag[procNum] = idle;
+        shmPtr->flag[pNum] = idle;
         
     }
     
