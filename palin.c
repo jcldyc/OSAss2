@@ -158,7 +158,7 @@ int main(int argc, char *argv[]){
 
         time_t rawtime2;
 		struct tm *info2;
-		buffer2[80];
+		char buffer2[80];
 		time( &rawtime2 );
 		info2 = localtime( &rawtime2 );
 		strftime(buffer2,80,"%x - %I:%M:%S%p", info2);
