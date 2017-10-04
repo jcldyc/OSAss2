@@ -30,7 +30,7 @@ int main(int argc, char *argv[]){
 	
 	int id;
     int pNum = atoi(argv[1]);;
-    int paliforniaNum = atoi(argv[2]); 
+    int thisPalindromeNumber = atoi(argv[2]); 
     int key = 3699;
 	shmPtr = &shm;
 	
@@ -70,7 +70,6 @@ int main(int argc, char *argv[]){
     //code to enter critical section
     int j;
     int n = 19;
-    int thisPalindromeNumber = paliforniaNum;
     int isAPalindrome;
     
     for (int i = 0; i < 5; ++i){
@@ -87,14 +86,14 @@ int main(int argc, char *argv[]){
             return 0;
         }
 
-        //check if it is a palindrome
+       /*  //check if it is a palindrome
         if(isPalindrome(possiblePalindrome) != 0){
             isAPalindrome = 1;
 
         }
         else{
             isAPalindrome = 0;
-        }
+        } */
     
         do{
             
@@ -152,7 +151,7 @@ int main(int argc, char *argv[]){
 
         FILE * filePtr;
 
-        if(isAPalindrome){
+        if(isPalindrome(possiblePalindrome)){
             filePtr = fopen("palin.out","a");
 
         }
