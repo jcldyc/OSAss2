@@ -93,6 +93,8 @@ int main(int argc, char *argv[]){
     
         do{
             
+			//Get's the time and outputs it when the  process is tyring to get into the CS
+			//reference:  https://www.tutorialspoint.com/c_standard_library/c_function_strftime.htm
 			
 			time_t rawtime;
 			struct tm *info;
@@ -102,7 +104,7 @@ int main(int argc, char *argv[]){
 			strftime(buffer,80,"%x - %I:%M:%S%p", info);
 			
 			//printTime();
-            fprintf(stderr, "\t| %s | \t process: %d\twants to enter the critical section.\n",buffer, procNum);
+            fprintf(stderr, "\t| %s | \t process: %d\t | Trying to enter Critical Section |\n",buffer, procNum);
 
             shmPtr->flag[procNum] = want_in; // Raise my flag
             j = shmPtr->turn; // Set local variable
@@ -126,6 +128,9 @@ int main(int argc, char *argv[]){
 
         shmPtr->turn = procNum;      
 
+		//Get's the time and outputs it when the  process is entering CS
+		//reference:  https://www.tutorialspoint.com/c_standard_library/c_function_strftime.htm
+		
 		time_t rawtime1;
 		struct tm *info1;
 		char buffer1[80];
@@ -133,7 +138,7 @@ int main(int argc, char *argv[]){
 		info1 = localtime( &rawtime1 );
 		strftime(buffer1,80,"%x - %I:%M:%S%p", info1);
 		
-        fprintf(stderr, "\t| %s | \t process: %d\tentering critical section.\n", buffer1, procNum);
+        fprintf(stderr, "\t| %s | \t process: %d\t | Begin Critical Section |\n", buffer1, procNum);
 
         //critical_section
         srand(time(NULL));
@@ -155,6 +160,9 @@ int main(int argc, char *argv[]){
   
         rN = rand()%3;
         sleep(rN);
+		
+		//Get's the time and outputs it when the  process is leaving CS
+		//reference:  https://www.tutorialspoint.com/c_standard_library/c_function_strftime.htm
 
         time_t rawtime2;
 		struct tm *info2;
@@ -162,18 +170,16 @@ int main(int argc, char *argv[]){
 		time( &rawtime2 );
 		info2 = localtime( &rawtime2 );
 		strftime(buffer2,80,"%x - %I:%M:%S%p", info2);
-        fprintf(stderr, "\t| %s | \t process: %d\texiting critical section.\n", buffer2, procNum);
+        fprintf(stderr, "\t| %s | \t process: %d\t | Leaave Critical Section |\n", buffer2, procNum);
+	
       
         j = (shmPtr->turn + 1) % n;
         while (shmPtr->flag[j] == idle)
             j = (j + 1) % n;
 
-        // Assign turn to next waiting process; change own flag to idle
-
         shmPtr->turn = j;
         shmPtr->flag[procNum] = idle;
         
-        //done in crit section
     }
     
     shmdt(shmPtr);
@@ -184,7 +190,7 @@ int main(int argc, char *argv[]){
 	//returns 1 or 2; 1= true & 2 = false
 	//ref:  http://www.geeksforgeeks.org/c-program-check-given-string-palindrome/
 
-	const int isPalindrome(char *str){
+const int isPalindrome(char *str){
     // Start from leftmost and rightmost corners of str
     int l = 0;
     int h = strlen(str) - 1;
@@ -206,7 +212,6 @@ void exitfunc(int sig){
     shmdt(shmPtr);
     exit(1);
 }
-
 
 void exitfuncCtrlC(int sig){
 
