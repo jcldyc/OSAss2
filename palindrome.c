@@ -10,9 +10,8 @@ int main(int argc, char *argv[]){
 		exit(1);
 	}
 	
-	char * ptr[];
-	ptr = argv[1];
-	isPalindrome(ptr);
+	isPalindrome(&argv[1]);
+	
 	
 }
 	
@@ -22,7 +21,7 @@ int main(int argc, char *argv[]){
 	
 	
 	
-	void isPalindrome(char str[])
+	void isPalindrome(char *str)
 {
     // Start from leftmost and rightmost corners of str
     int l = 0;
