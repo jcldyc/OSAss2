@@ -211,22 +211,21 @@ int main(int argc, char *argv[]){
 }
 
 
-const int isPalindrome(char * palindromeString){					//Palindrome website reference: http://www.geeksforgeeks.org/c-program-check-given-string-palindrome/
+const int isPalindrome(char * pString){					//Palindrome website reference: http://www.geeksforgeeks.org/c-program-check-given-string-palindrome/
 
-
-    // Start from leftmost and rightmost corners of str
+  // Start from leftmost and rightmost corners of str
     int l = 0;
-    int h = strlen(palindromeString)-1;
+    int h = strlen(pString) - 1;
  
     // Keep comparing characters while they are same
     while (h > l)
     {
-        if (palindromeString[l++] != palindromeString[h--])
+        if (pString[l++] != pString[h--])
         {
             return 0;				//returns a 0 if it is NOT a palindrome
         }
     }
-    return 1;		
+    return 1;	
 
 
 }
