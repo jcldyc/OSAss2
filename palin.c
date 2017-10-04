@@ -214,43 +214,19 @@ int main(int argc, char *argv[]){
 const int isPalindrome(char * palindromeString){					//Palindrome website reference: http://www.geeksforgeeks.org/c-program-check-given-string-palindrome/
 
 
-    int stringLength = strlen(palindromeString);
-
-    char editedString[stringLength+1]; 
-    //strcpy(editedString, palindromeString); 
-
-    int j = 0;
-    for(int i = 0; i < stringLength ;i++){
-        if (isalnum(palindromeString[i])){
-            editedString[j] = tolower(palindromeString[i]);
-            j++;
+    // Start from leftmost and rightmost corners of str
+    int l = 0;
+    int h = strlen(palindromeString);
+ 
+    // Keep comparing characters while they are same
+    while (h > l)
+    {
+        if (str[l++] != str[h--])
+        {
+            return 0;				//returns a 0 if it is NOT a palindrome
         }
     }
-    //null terminate new string
-    editedString[j] = '\0';
-
-
-    int editedStringLength = strlen(editedString);
-
-
-    char editedStringReversed[editedStringLength];
-
-    j = editedStringLength - 1;
-    for (int i = 0; i < editedStringLength; ++i){
-        editedStringReversed[i] = editedString[j];
-        j--;
-    }
-    editedStringReversed[editedStringLength] = '\0';
-
-
-
-    if (strcmp(editedString, editedStringReversed) == 0){
-            return 1;
-    }
-    else{
-            return 0;
-    }    
-
+    return 1;		
 
 
 }
