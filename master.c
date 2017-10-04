@@ -16,8 +16,10 @@ void ctrlPlusC(int sig);
 typedef struct PalInfo{							
     char pList[50][256];
     int turn;
-    enum state flag[19];
+    enum flag[19];
 } palInfo;
+
+
 
 //struct used for the multiprocessor solution
 
@@ -134,8 +136,16 @@ int main(int argc, char *argv[]){
     return 0;
 }
 
-void childProcessing(int childIndex, int palindromeIndex){
+//used to quit the running program when the user presses Ctrl + C
 
+void ctrlPlusC(int sig){
+    fprintf( stderr, "Ctrl + C:  GO CRAZY!\n");
+    shmdt(shmPtr);					//detach share mem
+    shmctl(id, IPC_RMID, NULL);
+    exit(1);
+}
+
+void childProcessing(int childIndex, int palindromeIndex){
 
 //get current working directory
     char cwd[256];
@@ -163,14 +173,7 @@ void childProcessing(int childIndex, int palindromeIndex){
     exit(127); //error out
 }
 
-//used to quit the running program when the user presses Ctrl + C
 
-void ctrlPlusC(int sig){
-    fprintf( stderr, "Ctrl + C:  GO CRAZY!\n");
-    shmdt(shmPtr);					//detach share mem
-    shmctl(id, IPC_RMID, NULL);
-    exit(1);
-}
 
 
 
