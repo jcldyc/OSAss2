@@ -11,7 +11,8 @@ int main(int argc, char *argv[]){
 	}
 	
 	
-	char *ptr = &argv[1];
+	char *ptr;
+	ptr = &argv[1];
 	isPalindrome(ptr);
 	
 }
