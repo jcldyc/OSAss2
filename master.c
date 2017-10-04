@@ -78,7 +78,7 @@ int main(int argc, char *argv[]){
         exit(1);
     }
 	
-	shmPtr = shmat(id, NULL, 0)
+	shmPtr = shmat(id, NULL, 0);
     if(shmPtr == (palInfo *) -1){
         perror("SHMAT");
         exit(1);
