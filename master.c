@@ -10,7 +10,7 @@
 
 //prototypes
 
-void childProcessing(int childIndex, int palindromeIndex);
+void cProcExec(int cIndex, int pIndex);
 void ctrlPlusC(int sig);
 
 typedef struct PalInfo{							
@@ -108,7 +108,7 @@ int main(int argc, char *argv[]){
         perror("fork");
         abort();
       } else if (pids[i] == 0) {
-        childProcessing(i, pCount);
+        cProcExec(i, pCount);
         printf("There was a problem creating the child.\n");
         exit(0);
       }
@@ -144,32 +144,25 @@ void ctrlPlusC(int sig){
     exit(1);
 }
 
-void childProcessing(int childIndex, int palindromeIndex){
+void cProcExec(int cIndex, int pIndex){
 
-//get current working directory
     char cwd[256];
     getcwd(cwd, sizeof(cwd));
-    //printf("Current working dir: %s\n", cwd);
-    char executableLocation[1024];
-    strcpy(executableLocation, cwd);
-    strcat(executableLocation, "/palin");
-    //printf("%s\n",  executableLocation);
+    char placeToExec[1024];
+    strcpy(placeToExec, cwd);
+    strcat(placeToExec, "/palin");
 
-
-    //int to string
     char index[10];
-    snprintf(index, 10, "%d", childIndex);
+    snprintf(index, 10, "%d", cIndex);
 
     char palinIndex[10];
-    snprintf(palinIndex,10,"%d", palindromeIndex);
+    snprintf(palinIndex,10,"%d", pIndex);
 
-    //set passed arguments. ./palin childIndex palindromeIndex
-    char *args[]={"./palin", index, palinIndex};
+    char *args[]={"./palin", index, palinIndex};		//this passes the arguments needed to exec the child  process
 
-    //printf("executing palin %d for pid %ld\n", childIndex + 1, (long)getpid());
     execvp("./palin", args);
-    printf("Error while executing ./palin for child %d\n", childIndex+1);
-    exit(127); //error out
+    printf("Error while executing ./palin for child %d\n", cIndex+1);
+    exit(1);
 }
 
 
