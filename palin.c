@@ -8,6 +8,7 @@
 #include <time.h>
 
 const int isPalindrome(char * palindromeString);
+void printTime();
 void exitfuncCtrlC(int sig);
 void exitfunc(int sig);
 
@@ -90,10 +91,12 @@ int main(int argc, char *argv[]){
         }
     
         do{
-            time(&timer);
+            /* time(&timer);
             tm_info = localtime(&timer);
-            strftime(wantInTime, 26, "%H:%M:%S", tm_info);
+            strftime(wantInTime, 26, "%H:%M:%S", tm_info); */
 			
+			
+			printTime();
             fprintf(stderr, "\t%s\tprocess: %d\twants to enter the critical section.\n", wantInTime, procNum);
 
             shmPtr->flag[procNum] = want_in; // Raise my flag
@@ -120,7 +123,7 @@ int main(int argc, char *argv[]){
 
         time(&timer);
         tm_info = localtime(&timer);
-        strftime(startTime, 26, "%Y-%m-%d %H:%M:%S", tm_info);
+        strftime(startTime, 26, "%H:%M:%S", tm_info);
 		
         fprintf(stderr, "\t%s\tprocess: %d\tentering critical section.\n", startTime, procNum);
 
@@ -147,7 +150,7 @@ int main(int argc, char *argv[]){
 
         time(&timer);
         tm_info = localtime(&timer);
-        strftime(endTime, 26, "%Y-%m-%d %H:%M:%S", tm_info);
+        strftime(endTime, 26, "%H:%M:%S", tm_info);
         fprintf(stderr, "\t%s\tprocess: %d\texiting critical section.\n", endTime, procNum);
       
         j = (shmPtr->turn + 1) % n;
@@ -199,6 +202,14 @@ void exitfuncCtrlC(int sig){
     fprintf( stderr, "Child %ld is dying from parent control c\n", (long)getpid());
     shmdt(shmPtr);
     exit(1);
+}
+
+void printTime(){
+	time_t rawtime;
+	struct tm * timeinfo;
+	time ( &rawtime );
+	timeinfo = localtime ( &rawtime );
+	printf ( "Current local time and date: %s", asctime (timeinfo) );
 }
 
 
