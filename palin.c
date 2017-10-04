@@ -71,6 +71,7 @@ int main(int argc, char *argv[]){
         char startTime[26];
         char endTime[26];
         char wantInTime[26];
+		
 
         if (currentpalNum < 50){
             strncpy(possiblePalindrome, shmPtr->palindromeList[currentpalNum],256);
@@ -96,14 +97,17 @@ int main(int argc, char *argv[]){
             strftime(wantInTime, 26, "%H:%M:%S", tm_info);
 			
 			time_t rawtime;
-		struct tm * timeinfo;
-		time ( &rawtime );
-		timeinfo = localtime ( &rawtime );
-		//printf ( "%s", asctime (timeinfo) );
-			
+			struct tm *info;
+			char buffer[80];
+
+			time( &rawtime );
+
+			info = localtime( &rawtime );
+
+			strftime(buffer,80,"%x - %I:%M%p", info);
 			
 			//printTime();
-            fprintf(stderr, "\t%s \t process: %d\twants to enter the critical section.\n",asctime (timeinfo), procNum);
+            fprintf(stderr, "\t%s \t process: %d\twants to enter the critical section.\n",buffer, procNum);
 
             shmPtr->flag[procNum] = want_in; // Raise my flag
             j = shmPtr->turn; // Set local variable
