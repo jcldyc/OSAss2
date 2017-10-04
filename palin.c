@@ -86,15 +86,6 @@ int main(int argc, char *argv[]){
         else{
             return 0;
         }
-
-       /*  //check if it is a palindrome
-        if(isPalindrome(possiblePalindrome) != 0){
-            isAPalindrome = 1;
-
-        }
-        else{
-            isAPalindrome = 0;
-        } */
     
         do{
             
@@ -155,7 +146,6 @@ int main(int argc, char *argv[]){
 
         if(isPalindrome(possiblePalindrome)){
             filePtr = fopen("palin.out","a");
-
         }
         else{
             filePtr = fopen("nopalin.out","a");
@@ -196,7 +186,7 @@ int main(int argc, char *argv[]){
 	//returns 1 or 2; 1= true & 2 = false
 	//ref:  http://www.geeksforgeeks.org/c-program-check-given-string-palindrome/
 
-/* const int isPalindrome(char *str){
+const int isPalindrome(char *str){
     // Start from leftmost and rightmost corners of str
     int l = 0;
     int h = strlen(str) - 1;
@@ -211,7 +201,7 @@ int main(int argc, char *argv[]){
     }
 	return 1;						//IS a pal
 }
- */
+
  
  
  /*
@@ -234,7 +224,7 @@ int main(int argc, char *argv[]){
      return 0;
  } */
  
- const int isPalindrome(char * palindromeString){
+ /* const int isPalindrome(char * palindromeString){
 
 
     int stringLength = strlen(palindromeString);
@@ -276,7 +266,7 @@ int main(int argc, char *argv[]){
 
 
 
-}
+} */
  
  
 
