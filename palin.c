@@ -68,6 +68,7 @@ int main(int argc, char *argv[]){
         
         char possiblePalindrome[256];
         char startTime[26];
+        char endTime[26];
         char wantInTime[26];
 
         if (currentpalNum < 50){
@@ -92,7 +93,7 @@ int main(int argc, char *argv[]){
             time(&timer);
             tm_info = localtime(&timer);
 
-            strftime(wantInTime, 26, "%Y-%m-%d %H:%M:%S", tm_info);
+            strftime(wantInTime, 26, "%H:%M:%S", tm_info);
             fprintf(stderr, "\t%s\tprocess: %d\twants to enter the critical section.\n", wantInTime, procNum);
 
             shmPtr->flag[procNum] = want_in; // Raise my flag
@@ -126,7 +127,7 @@ int main(int argc, char *argv[]){
         //critical_section
         srand(time(NULL));
         int rN = rand()%3;
-        sleep(rN);
+        sleep(randomNumber);
 
         FILE * filePtr;
 
@@ -139,11 +140,15 @@ int main(int argc, char *argv[]){
         }
         fprintf(filePtr, "%ld %d %s\n", (long)getpid(), currentpalNum-n+1, possiblePalindrome);
         fclose(filePtr);
- 
-        rN = rand()%3;
-        sleep(rN);
 
-        fprintf(stderr, "\tprocess: %d\texiting critical section.\n", procNum);
+  
+        rN = rand()%3;
+        sleep(randomNumber);
+
+        time(&timer);
+        tm_info = localtime(&timer);
+        strftime(endTime, 26, "%Y-%m-%d %H:%M:%S", tm_info);
+        fprintf(stderr, "\t%s\tprocess: %d\texiting critical section.\n", endTime, procNum);
       
         j = (shmPtr->turn + 1) % n;
         while (shmPtr->flag[j] == idle)

@@ -150,10 +150,10 @@ void ctrlPlusC(int sig){
 
 void cProcExec(int cIndex, int pIndex){
 
-    char cwd[256];
-    getcwd(cwd, sizeof(cwd));
+    char dir[256];
+    getdir(dir, sizeof(dir));
     char placeToExec[1024];
-    strcpy(placeToExec, cwd);
+    strcpy(placeToExec, dir);
     strcat(placeToExec, "/palin");
 
     char index[10];
