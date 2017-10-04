@@ -16,9 +16,8 @@ void ctrlPlusC(int sig);
 typedef struct PalInfo{							
     char pList[50][256];
     int turn;
-    enum flag[19];
+    enum state flag[19];
 } palInfo;
-
 
 
 //struct used for the multiprocessor solution
