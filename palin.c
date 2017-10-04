@@ -216,20 +216,68 @@ int main(int argc, char *argv[]){
  /*
  * Function to check whether a string is palindrome or not
  */
- const int isPalindrome(char *inputString, int leftIndex, int rightIndex){
-     /* Input Validation */
+ 
+ 
+/*  const int isPalindrome(char *inputString, int leftIndex, int rightIndex){
+     
      if(NULL == inputString || leftIndex < 0 || rightIndex < 0){
          printf("Invalid Input");
          return 0;
      }
-     /* Recursion termination condition */
+     
      if(leftIndex >= rightIndex)
          return 1;
      if(inputString[leftIndex] == inputString[rightIndex]){
          return isPalindrome(inputString, leftIndex + 1, rightIndex - 1);
      }
      return 0;
- }
+ } */
+ 
+ const int isPalindrome(char * palindromeString){
+
+
+    int stringLength = strlen(palindromeString);
+
+    char editedString[stringLength+1]; 
+    //strcpy(editedString, palindromeString); 
+
+    int j = 0;
+    for(int i = 0; i < stringLength ;i++){
+        if (isalnum(palindromeString[i])){
+            editedString[j] = tolower(palindromeString[i]);
+            j++;
+        }
+    }
+    //null terminate new string
+    editedString[j] = '\0';
+
+
+    int editedStringLength = strlen(editedString);
+
+
+    char editedStringReversed[editedStringLength];
+
+    j = editedStringLength - 1;
+    for (int i = 0; i < editedStringLength; ++i){
+        editedStringReversed[i] = editedString[j];
+        j--;
+    }
+    editedStringReversed[editedStringLength] = '\0';
+
+
+
+    if (strcmp(editedString, editedStringReversed) == 0){
+            return 1;
+    }
+    else{
+            return 0;
+    }    
+
+
+
+}
+ 
+ 
 
 //detaches shared memory 
 void exitfunc(int sig){	
