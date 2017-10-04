@@ -9,9 +9,11 @@ int main(int argc, char *argv[]){
 		printf("no following word");
 		exit(1);
 	}
-	printf("%s", argv[1]);
 	isPalindrome(argv[1]);
-	
+	char *ptr;
+	char string[10] = {1, 0, 0, 0, ' ', 0, 0, 0, 0, 1};
+	ptr = &string;
+	isPalindrome(ptr);
 	
 }
 	
@@ -32,11 +34,11 @@ int main(int argc, char *argv[]){
     {
         if (str[l++] != str[h--])
         {
-            printf("%s is Not Palindromen", str);
+            printf("%s is Not Palindrome", str);
             return;
         }
     }
-    printf("%s is palindromen", str);
+    printf("%s is palindrome", str);
 }
 	
 	
