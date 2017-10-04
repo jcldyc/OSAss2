@@ -96,7 +96,7 @@ int main(int argc, char *argv[]){
 			time_t now;
 			time(&now);
  
-			fprintf("%s", ctime(&now));
+			printf("%s", ctime(&now));
 			
             fprintf(stderr, "\t%s\tprocess: %d\twants to enter the critical section.\n", ctime(&now), procNum);
 
