@@ -13,7 +13,7 @@ int main(int argc, char *argv[]){
 	char *ptr;
 	char string[10] = {1, 0, 0, 0, ' ', 0, 0, 0, 0, 1};
 	ptr = &string;
-	isPalindrome(ptr);
+	isPalindrome(string);
 	
 }
 	
