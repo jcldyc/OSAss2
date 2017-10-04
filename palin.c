@@ -10,8 +10,8 @@
 //const int isPalindrome(char *inputString, int leftIndex, int rightIndex);
 const int isPalindrome(char * palindromeString);
 void printTime();
-void exitfuncCtrlC(int sig);
-void exitfunc(int sig);
+void ctrlPlusC(int sig);
+void exitSignal(int sig);
 
 enum state {
  idle, want_in, in_cs 
@@ -35,12 +35,11 @@ int main(int argc, char *argv[]){
     int key = 3699;
 	shmPtr = &shm;
 	
-
-    if (signal(SIGUSR1, exitfunc) == SIG_ERR) {
+    if (signal(SIGUSR1, exitSignal) == SIG_ERR) {
         printf("SIGUSR1 error\n");
         exit(1);
     }
-    if (signal(SIGINT, exitfuncCtrlC) == SIG_ERR) {
+    if (signal(SIGINT, ctrlPlusC) == SIG_ERR) {
         printf("SIGINT error\n");
         exit(1);
     }
@@ -102,16 +101,12 @@ int main(int argc, char *argv[]){
 			//printTime();
             fprintf(stderr, "\t| %s | \t process: %d\t | Trying to enter Critical Section |\n",buffer, pNum);
 
-            shmPtr->flag[pNum] = want_in; // Raise my flag
-            j = shmPtr->turn; // Set local variable
-            while ( j != pNum )                                            //while j != the process' constant
-                j = ( shmPtr->flag[j] != idle ) ? shmPtr->turn : ( j + 1 ) % n;         //if the current process whose turn it is idle set j to (j+1) %n
-
-            // Declare intention to enter critical section
+            shmPtr->flag[pNum] = want_in;
+            j = shmPtr->turn; 
+            while ( j != pNum )                                            
+                j = ( shmPtr->flag[j] != idle ) ? shmPtr->turn( j + 1 ) % n;      
 
             shmPtr->flag[pNum] = in_cs;
-
-            // Check that no one else is in critical section
 
             for ( j = 0; j < n; j++ ){
                 if ( ( j != pNum ) && ( shmPtr->flag[j] == in_cs ) ){
@@ -119,8 +114,6 @@ int main(int argc, char *argv[]){
                 }
             }
         } while (( j < n ) || ( shmPtr->turn != pNum && shmPtr->flag[shmPtr->turn] != idle ));
-
-        // Assign turn to self and enter critical section
 
         shmPtr->turn = pNum;      
 
@@ -188,6 +181,15 @@ int main(int argc, char *argv[]){
 
 const int isPalindrome(char *str){
     // Start from leftmost and rightmost corners of str
+	
+	int length = strlen(str);
+	for(int i=0;i<length;i++){
+		if(isalnum(str[i])){
+			str[i]=tolower(str[i]);
+		}
+		
+	}
+	
     int l = 0;
     int h = strlen(str) - 1;
  
@@ -204,25 +206,9 @@ const int isPalindrome(char *str){
 
  
  
- /*
- * Function to check whether a string is palindrome or not
- */
+ /
  
  
-/*  const int isPalindrome(char *inputString, int leftIndex, int rightIndex){
-     
-     if(NULL == inputString || leftIndex < 0 || rightIndex < 0){
-         printf("Invalid Input");
-         return 0;
-     }
-     
-     if(leftIndex >= rightIndex)
-         return 1;
-     if(inputString[leftIndex] == inputString[rightIndex]){
-         return isPalindrome(inputString, leftIndex + 1, rightIndex - 1);
-     }
-     return 0;
- } */
  
  /* const int isPalindrome(char * palindromeString){
 
@@ -271,12 +257,12 @@ const int isPalindrome(char *str){
  
 
 //detaches shared memory 
-void exitfunc(int sig){	
+void exitSignal(int sig){	
     shmdt(shmPtr);
     exit(1);
 }
 
-void exitfuncCtrlC(int sig){
+void ctrlPlusC(int sig){
 
     fprintf( stderr, "Child Process: %ld  | Ctrl + C\n", (long)getpid());
     shmdt(shmPtr);
