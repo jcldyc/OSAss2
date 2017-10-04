@@ -151,7 +151,7 @@ int main(int argc, char *argv[]){
         tm_info = localtime(&timer);
         strftime(endTime, 26, "%Y-%m-%d %H:%M:%S", tm_info); */
 		
-		time_t now = time(0); // Get the system time
+		now = time(0); // Get the system time
         fprintf(stderr, "\t%s\tprocess: %d\texiting critical section.\n", now, procNum);
       
         j = (shmPtr->turn + 1) % n;
