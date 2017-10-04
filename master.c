@@ -37,6 +37,7 @@ int main(int argc, char *argv[])
 	
 	if(argc !=2){
 		printf("./master must be followed with a file");
+		exit(1);
 	}
     for (i = 0; i < 19; ++i)
     {
