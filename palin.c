@@ -126,12 +126,12 @@ int main(int argc, char *argv[]){
 
         shmPtr->turn = procNum;      
 
-		time_t rawtime;
-		struct tm *info;
+		time_t rawtime1;
+		struct tm *info1;
 		char buffer1[80];
-		time( &rawtime );
-		info = localtime( &rawtime );
-		strftime(buffer,80,"%x - %I:%M:%S%p", info);
+		time( &rawtime1 );
+		info1 = localtime( &rawtime1 );
+		strftime(buffer1,80,"%x - %I:%M:%S%p", info1);
 		
         fprintf(stderr, "\t%s\tprocess: %d\tentering critical section.\n", buffer1, procNum);
 
@@ -156,12 +156,12 @@ int main(int argc, char *argv[]){
         rN = rand()%3;
         sleep(rN);
 
-        time_t rawtime;
-		struct tm *info;
+        time_t rawtime2;
+		struct tm *info2;
 		buffer2[80];
-		time( &rawtime );
-		info = localtime( &rawtime );
-		strftime(buffer,80,"%x - %I:%M:%S%p", info);
+		time( &rawtime2 );
+		info2 = localtime( &rawtime2 );
+		strftime(buffer2,80,"%x - %I:%M:%S%p", info2);
         fprintf(stderr, "\t%s\tprocess: %d\texiting critical section.\n", buffer2, procNum);
       
         j = (shmPtr->turn + 1) % n;
