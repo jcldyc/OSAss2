@@ -16,14 +16,15 @@ enum state {
  idle, want_in, in_cs 
 };
 
-typedef struct Data{
-    char palindromeList[50][256];
+typedef struct PalInfo{
+    char pList[50][256];
     int turn;
     enum state flag[19];
-} SharedData;
+} palInfo;
 
-SharedData shm;
-SharedData *shmPtr;
+
+palInfo shm;
+palInfo *shmPtr;
 
 int main(int argc, char *argv[]){
 	
@@ -46,7 +47,7 @@ int main(int argc, char *argv[]){
         exit(1);
     }
 
-    if((shmPtr = shmat(id, NULL, 0)) == (SharedData *) -1){
+    if((shmPtr = shmat(id, NULL, 0)) == (palInfo *) -1){
         perror("SHMAT");
         exit(1);
     }
@@ -74,7 +75,7 @@ int main(int argc, char *argv[]){
 		
 
         if (currentpalNum < 50){
-            strncpy(possiblePalindrome, shmPtr->palindromeList[currentpalNum],256);
+            strncpy(possiblePalindrome, shmPtr->pList[currentpalNum],256);
             strtok(possiblePalindrome, "\n");
             currentpalNum = currentpalNum + n;
         }
@@ -138,7 +139,7 @@ int main(int argc, char *argv[]){
 		info1 = localtime( &rawtime1 );
 		strftime(buffer1,80,"%x - %I:%M:%S%p", info1);
 		
-        fprintf(stderr, "\t| %s | \t process: %d\t | Begin Critical Section |\n", buffer1, procNum);
+        fprintf(stderr, "\t| %s | \t process: %d\t | BEGIN Critical Section |\n", buffer1, procNum);
 
         //critical_section
         srand(time(NULL));
@@ -170,7 +171,7 @@ int main(int argc, char *argv[]){
 		time( &rawtime2 );
 		info2 = localtime( &rawtime2 );
 		strftime(buffer2,80,"%x - %I:%M:%S%p", info2);
-        fprintf(stderr, "\t| %s | \t process: %d\t | Leaave Critical Section |\n", buffer2, procNum);
+        fprintf(stderr, "\t| %s | \t process: %d\t | LEAVE Critical Section |\n", buffer2, procNum);
 	
       
         j = (shmPtr->turn + 1) % n;
