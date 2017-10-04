@@ -1,21 +1,4 @@
-Skip to content
-This repository
-Search
-Pull requests
-Issues
-Marketplace
-Explore
- @jcldyc
- Sign out
- Watch 0
-  Star 0  Fork 0 BenDSparks/Assignment-2
- Code  Issues 0  Pull requests 0  Projects 0  Wiki Insights 
-Branch: master Find file Copy pathAssignment-2/master.c
-0d01745  6 days ago
-@thetotoro1 thetotoro1 Final Commit
-1 contributor
-RawBlameHistory     
-233 lines (150 sloc)  4.09 KB
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h> 
@@ -246,17 +229,3 @@ void exitfuncCtrlC(int sig){
 }
 
 
-
-
-© 2017 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Help
-Contact GitHub
-API
-Training
-Shop
-Blog
-About
