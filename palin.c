@@ -97,7 +97,7 @@ int main(int argc, char *argv[]){
 			
 			
 			printTime();
-            fprintf(stderr, "\t%s\tprocess: %d\twants to enter the critical section.\n", wantInTime, procNum);
+            fprintf(stderr, "\t\tprocess: %d\twants to enter the critical section.\n", procNum);
 
             shmPtr->flag[procNum] = want_in; // Raise my flag
             j = shmPtr->turn; // Set local variable
@@ -209,7 +209,7 @@ void printTime(){
 	struct tm * timeinfo;
 	time ( &rawtime );
 	timeinfo = localtime ( &rawtime );
-	printf ( "%s", asctime (timeinfo) );
+	printf ( "\t \t%s", asctime (timeinfo) );
 }
 
 
