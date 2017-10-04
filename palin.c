@@ -118,13 +118,11 @@ int main(int argc, char *argv[]){
 
         shmPtr->turn = procNum;      
 
-        /* time(&timer);
+        time(&timer);
         tm_info = localtime(&timer);
-        strftime(startTime, 26, "%Y-%m-%d %H:%M:%S", tm_info); */
+        strftime(startTime, 26, "%Y-%m-%d %H:%M:%S", tm_info);
 		
-		time_t now = time(0); // Get the system time
-		
-        fprintf(stderr, "\t%s\tprocess: %d\tentering critical section.\n", now, procNum);
+        fprintf(stderr, "\t%s\tprocess: %d\tentering critical section.\n", startTime, procNum);
 
         //critical_section
         srand(time(NULL));
@@ -147,12 +145,10 @@ int main(int argc, char *argv[]){
         rN = rand()%3;
         sleep(rN);
 
-        /* time(&timer);
+        time(&timer);
         tm_info = localtime(&timer);
-        strftime(endTime, 26, "%Y-%m-%d %H:%M:%S", tm_info); */
-		
-		now = time(0); // Get the system time
-        fprintf(stderr, "\t%s\tprocess: %d\texiting critical section.\n", now, procNum);
+        strftime(endTime, 26, "%Y-%m-%d %H:%M:%S", tm_info);
+        fprintf(stderr, "\t%s\tprocess: %d\texiting critical section.\n", endTime, procNum);
       
         j = (shmPtr->turn + 1) % n;
         while (shmPtr->flag[j] == idle)
