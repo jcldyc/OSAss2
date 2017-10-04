@@ -1,4 +1,4 @@
-CC = gcc -std=cc99
+CC = gcc -std=c99
 
 
 
