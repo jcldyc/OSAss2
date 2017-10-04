@@ -133,7 +133,7 @@ int main(int argc, char *argv[]){
 		info1 = localtime( &rawtime1 );
 		strftime(buffer1,80,"%x - %I:%M:%S%p", info1);
 		
-        fprintf(stderr, "\t%s\tprocess: %d\tentering critical section.\n", buffer1, procNum);
+        fprintf(stderr, "\t| %s | \t process: %d\tentering critical section.\n", buffer1, procNum);
 
         //critical_section
         srand(time(NULL));
@@ -162,7 +162,7 @@ int main(int argc, char *argv[]){
 		time( &rawtime2 );
 		info2 = localtime( &rawtime2 );
 		strftime(buffer2,80,"%x - %I:%M:%S%p", info2);
-        fprintf(stderr, "\t%s\tprocess: %d\texiting critical section.\n", buffer2, procNum);
+        fprintf(stderr, "\t| %s | \t process: %d\texiting critical section.\n", buffer2, procNum);
       
         j = (shmPtr->turn + 1) % n;
         while (shmPtr->flag[j] == idle)
@@ -210,7 +210,7 @@ void exitfunc(int sig){
 
 void exitfuncCtrlC(int sig){
 
-    fprintf( stderr, "Child %ld is dying from parent control c\n", (long)getpid());
+    fprintf( stderr, "Child Process: %ld  | Ctrl + C\n", (long)getpid());
     shmdt(shmPtr);
     exit(1);
 }
