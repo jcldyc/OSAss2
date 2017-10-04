@@ -91,7 +91,7 @@ int main()
     }
 
     //attach file
-    FILE* file = fopen("stringList", "r");
+    FILE* file = fopen("stringFile", "r");
 
 
     //read file into array
