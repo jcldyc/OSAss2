@@ -7,7 +7,8 @@
 #include <signal.h>
 #include <time.h>
 
-const int isPalindrome(char *inputString, int leftIndex, int rightIndex);
+//const int isPalindrome(char *inputString, int leftIndex, int rightIndex);
+const int isPalindrome(char * palindromeString)
 void printTime();
 void exitfuncCtrlC(int sig);
 void exitfunc(int sig);
