@@ -10,9 +10,6 @@
 const int isPalindrome(char * palindromeString);
 void exitfuncCtrlC(int sig);
 void exitfunc(int sig);
-void exitfuncAlarm(int sig);
-
-
 
 enum state {
  idle, want_in, in_cs 
@@ -28,9 +25,10 @@ SharedData shm;
 SharedData *shmPtr;
 
 int main(int argc, char *argv[]){
-
-
-
+	
+	int id;
+    int key = 3699;
+	shmPtr = &shm;
 
     if (signal(SIGUSR1, exitfunc) == SIG_ERR) {
         printf("SIGUSR1 error\n");
@@ -40,29 +38,14 @@ int main(int argc, char *argv[]){
         printf("SIGINT error\n");
         exit(1);
     }
-    if (signal(SIGALRM, exitfuncAlarm) == SIG_ERR){
-        printf("SIGALRM error\n");
-    }
-
-    
-
-    int id;
-    int key = 3699;
-
-
-
-    shmPtr = &shm;
-
     
     //reserve space for struct and attach to pointer
-    if ((id = shmget(key,sizeof(shm), IPC_CREAT | 0666)) < 0)
-    {
+    if ((id = shmget(key,sizeof(shm), IPC_CREAT | 0666)) < 0){
         perror("SHMGET");
         exit(1);
     }
 
-    if((shmPtr = shmat(id, NULL, 0)) == (SharedData *) -1)
-    {
+    if((shmPtr = shmat(id, NULL, 0)) == (SharedData *) -1){
         perror("SHMAT");
         exit(1);
     }
@@ -75,25 +58,17 @@ int main(int argc, char *argv[]){
     time_t timer;
     struct tm* tm_info;
 
-
-    
-
-
     //code to enter critical section
     int j;
     int n = 19;
     int currentpalNum = palNum;
     int isAPalindrome;
     
-    for (int i = 0; i < 5; ++i)
-    {
+    for (int i = 0; i < 5; ++i){
         
         char possiblePalindrome[256];
         char startTime[26];
-        char endTime[26];
         char wantInTime[26];
-
-    
 
         if (currentpalNum < 50){
             strncpy(possiblePalindrome, shmPtr->palindromeList[currentpalNum],256);
@@ -103,10 +78,6 @@ int main(int argc, char *argv[]){
         else{
             return 0;
         }
-
-
-
-        
 
         //check if it is a palindrome
         if(isPalindrome(possiblePalindrome) != 0){
@@ -131,10 +102,7 @@ int main(int argc, char *argv[]){
 
             // Declare intention to enter critical section
 
-
             shmPtr->flag[procNum] = in_cs;
-
-
 
             // Check that no one else is in critical section
 
@@ -147,9 +115,7 @@ int main(int argc, char *argv[]){
 
         // Assign turn to self and enter critical section
 
-        shmPtr->turn = procNum;
-
-        
+        shmPtr->turn = procNum;      
 
         time(&timer);
         tm_info = localtime(&timer);
@@ -159,10 +125,8 @@ int main(int argc, char *argv[]){
 
         //critical_section
         srand(time(NULL));
-        int randomNumber = rand()%3;
+        int rN = rand()%3;
         sleep(randomNumber);
-
-
 
         FILE * filePtr;
 
@@ -173,24 +137,14 @@ int main(int argc, char *argv[]){
         else{
             filePtr = fopen("nopalin.out","a");
         }
-
         fprintf(filePtr, "%ld %d %s\n", (long)getpid(), currentpalNum-n+1, possiblePalindrome);
-
         fclose(filePtr);
-
-
-        time(&timer);
-        tm_info = localtime(&timer);
-        srand(time(NULL));
-        randomNumber = rand()%3;
+ 
+        rN = rand()%3;
         sleep(randomNumber);
 
-        time(&timer);
-        tm_info = localtime(&timer);
-        strftime(endTime, 26, "%Y-%m-%d %H:%M:%S", tm_info);
-        fprintf(stderr, "\t%s\tprocess: %d\texiting critical section.\n", endTime, procNum);
-
-        
+        fprintf(stderr, "\tprocess: %d\texiting critical section.\n", procNum);
+      
         j = (shmPtr->turn + 1) % n;
         while (shmPtr->flag[j] == idle)
             j = (j + 1) % n;
@@ -201,18 +155,17 @@ int main(int argc, char *argv[]){
         shmPtr->flag[procNum] = idle;
         
         //done in crit section
-
     }
     
-
     shmdt(shmPtr);
     return 0;
 }
 
+	//function that checks if the string is a palindrome
+	//returns 1 or 2; 1= true & 2 = false
+	//ref:  http://www.geeksforgeeks.org/c-program-check-given-string-palindrome/
 
-
-	const int isPalindrome(char *str)
-{
+	const int isPalindrome(char *str){
     // Start from leftmost and rightmost corners of str
     int l = 0;
     int h = strlen(str) - 1;
@@ -243,14 +196,4 @@ void exitfuncCtrlC(int sig){
     exit(1);
 }
 
-void exitfuncAlarm(int sig){
 
-   
-    fprintf( stderr, "Alarm Signal from parent. Detaching memory and killing self\n");
-
-
-    shmdt(shmPtr);
-   
-
-    exit(1);
-}

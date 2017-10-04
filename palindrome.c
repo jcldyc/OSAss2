@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include<bits/stdc++.h>
 
 void isPalindrome(char str[]);
 
@@ -10,10 +11,8 @@ int main(int argc, char *argv[]){
 		exit(1);
 	}
 	isPalindrome(argv[1]);
-	char *ptr;
-	char string[10] = {1, 0, 0, 0, ' ', 0, 0, 0, 0, 1};
+	printf("%s\n", argv[1]);
 	
-	isPalindrome(string);
 	
 }
 	

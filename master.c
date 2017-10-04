@@ -1,3 +1,5 @@
+//Link to project https://mygateway.umsl.edu/bbcswebdav/pid-4181242-dt-content-rid-25566240_1/courses/UMSL-CMPSCI4760-002-12129-FS2017/cs4760Assignment2Fall2017Hauschild%281%29.pdf
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h> 
@@ -10,8 +12,8 @@
 
 //prototypes
 
-void cProcExec(int cIndex, int pIndex);
 void ctrlPlusC(int sig);
+void cProcExec(int cIndex, int pIndex);
 
 //struct used for the multiprocessor solution
 
@@ -25,14 +27,11 @@ typedef struct PalInfo{
     enum state flag[19];
 } palInfo;
 
-
-
 palInfo shm;
 palInfo *shmPtr;
 pid_t pids[19];
 int n = 19;
 int id;
-
 
 int main(int argc, char *argv[]){
     int i;
@@ -73,6 +72,10 @@ int main(int argc, char *argv[]){
     }
 
     //Reserving memory.  Set's the permissions with  the 0666 argument
+	// references:  
+	// https://www.youtube.com/watch?v=SMeDw2GDMsE
+	// http://users.cs.cf.ac.uk/Dave.Marshall/C/node27.html
+	// https://stackoverflow.com/questions/13334352/how-to-attach-an-array-of-strings-to-shared-memory-c
 	
 	id = shmget(key,sizeof(shm), IPC_CREAT | 0666);
     if (id < 0){
@@ -106,7 +109,7 @@ int main(int argc, char *argv[]){
 	
     for (i = 0; i < 19; i++) {
       if ((pids[i] = fork()) < 0) {
-        perror("fork");
+        perror("fork()");
         abort();
       } else if (pids[i] == 0) {
         cProcExec(i, pCount);
