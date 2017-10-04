@@ -223,10 +223,10 @@ const int isPalindrome(char * palindromeString){					//Palindrome website refere
     {
         if (palindromeString[l++] != palindromeString[h--])
         {
-            return 0;				//returns a 0 if it is NOT a palindrome
+            return 1;				//returns a 0 if it is NOT a palindrome
         }
     }
-    return 1;		
+    return 0;		
 
 
 }
