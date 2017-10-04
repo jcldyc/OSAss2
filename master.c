@@ -56,7 +56,7 @@ int main(int argc, char *argv[])
     
     int palindromeCount = 0;
 
-    int key = 8008;
+    int key = 9929;
 
     FILE* file_ptr = fopen("palin.out", "w");
     fclose(file_ptr);
