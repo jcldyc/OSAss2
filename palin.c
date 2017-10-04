@@ -90,11 +90,17 @@ int main(int argc, char *argv[]){
         }
     
         do{
-            time(&timer);
+            /* time(&timer);
             tm_info = localtime(&timer);
+            strftime(wantInTime, 26, "%H:%M:%S", tm_info); */
+			
+			time_t rawtime;
+			struct tm * timeinfo;
 
-            strftime(wantInTime, 26, "%H:%M:%S", tm_info);
-            fprintf(stderr, "\t%s\tprocess: %d\twants to enter the critical section.\n", wantInTime, procNum);
+			time ( &rawtime );
+			timeinfo = localtime ( &rawtime );
+			
+            fprintf(stderr, "\t%s\tprocess: %d\twants to enter the critical section.\n", asctime (timeinfo), procNum);
 
             shmPtr->flag[procNum] = want_in; // Raise my flag
             j = shmPtr->turn; // Set local variable
