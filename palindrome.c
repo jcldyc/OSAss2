@@ -6,7 +6,7 @@ void isPalindrome(char str[]);
 
 int main(int argc, char *argv[]){
 	if(argc != 2){
-		fprint("no following word");
+		printf("no following word");
 		exit(1);
 	}
 	
