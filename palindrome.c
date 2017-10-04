@@ -9,8 +9,11 @@ int main(int argc, char *argv[]){
 		printf("no following word");
 		exit(1);
 	}
-	
-	isPalindrome(&argv[1]);
+	char *ptr;
+	char string[4];
+	string = argv[1];
+	ptr = &string;
+	isPalindrome(ptr);
 	
 	
 }
