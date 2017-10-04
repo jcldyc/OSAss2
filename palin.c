@@ -30,7 +30,7 @@ int main(int argc, char *argv[]){
 	
 	int id;
     int pNum = atoi(argv[1]);;
-    int palindromeNum = atoi(argv[2]); 
+    int paliforniaNum = atoi(argv[2]); 
     int key = 3699;
 	shmPtr = &shm;
 	
@@ -70,7 +70,7 @@ int main(int argc, char *argv[]){
     //code to enter critical section
     int j;
     int n = 19;
-    int currentpalNum = palindromeNum;
+    int thisPalindromeNumber = paliforniaNum;
     int isAPalindrome;
     
     for (int i = 0; i < 5; ++i){
@@ -78,10 +78,10 @@ int main(int argc, char *argv[]){
         char possiblePalindrome[256];
 		
 
-        if (currentpalNum < 50){
-            strncpy(possiblePalindrome, shmPtr->pList[currentpalNum],256);
+        if (thisPalindromeNumber < 50){
+            strncpy(possiblePalindrome, shmPtr->pList[thisPalindromeNumber],256);
             strtok(possiblePalindrome, "\n");
-            currentpalNum = currentpalNum + n;
+            thisPalindromeNumber = thisPalindromeNumber + n;
         }
         else{
             return 0;
@@ -159,7 +159,7 @@ int main(int argc, char *argv[]){
         else{
             filePtr = fopen("nopalin.out","a");
         }
-        fprintf(filePtr, "%ld %d %s\n", (long)getpid(), currentpalNum-n+1, possiblePalindrome);
+        fprintf(filePtr, "%ld %d %s\n", (long)getpid(), thisPalindromeNumber-n+1, possiblePalindrome);
         fclose(filePtr);
 
   
