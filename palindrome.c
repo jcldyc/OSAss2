@@ -10,9 +10,8 @@ int main(int argc, char *argv[]){
 		exit(1);
 	}
 	
-	char * ptr;
-	char word[4] = argv[1];
-	ptr = &word;
+	char * ptr[];
+	ptr = argv[1];
 	isPalindrome(ptr);
 	
 }
