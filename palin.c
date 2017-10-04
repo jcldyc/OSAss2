@@ -216,7 +216,7 @@ int main(int argc, char *argv[]){
  /*
  * Function to check whether a string is palindrome or not
  */
- int isPalindrome(char *inputString, int leftIndex, int rightIndex){
+ const int isPalindrome(char *inputString, int leftIndex, int rightIndex){
      /* Input Validation */
      if(NULL == inputString || leftIndex < 0 || rightIndex < 0){
          printf("Invalid Input");
