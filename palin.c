@@ -126,7 +126,7 @@ int main(int argc, char *argv[]){
         //critical_section
         srand(time(NULL));
         int rN = rand()%3;
-        sleep(randomNumber);
+        sleep(rN);
 
         FILE * filePtr;
 
@@ -141,7 +141,7 @@ int main(int argc, char *argv[]){
         fclose(filePtr);
  
         rN = rand()%3;
-        sleep(randomNumber);
+        sleep(rN);
 
         fprintf(stderr, "\tprocess: %d\texiting critical section.\n", procNum);
       
