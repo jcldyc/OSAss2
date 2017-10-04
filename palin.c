@@ -92,18 +92,13 @@ int main(int argc, char *argv[]){
         }
     
         do{
-            time(&timer);
-            tm_info = localtime(&timer);
-            strftime(wantInTime, 26, "%H:%M:%S", tm_info);
+            
 			
 			time_t rawtime;
 			struct tm *info;
 			char buffer[80];
-
 			time( &rawtime );
-
 			info = localtime( &rawtime );
-
 			strftime(buffer,80,"%x - %I:%M:%S%p", info);
 			
 			//printTime();
@@ -131,11 +126,14 @@ int main(int argc, char *argv[]){
 
         shmPtr->turn = procNum;      
 
-        time(&timer);
-        tm_info = localtime(&timer);
-        strftime(startTime, 26, "%H:%M:%S", tm_info);
+        time_t rawtime;
+			struct tm *info;
+			buffer[80];
+			time( &rawtime );
+			info = localtime( &rawtime );
+			strftime(buffer,80,"%x - %I:%M:%S%p", info);
 		
-        fprintf(stderr, "\t%s\tprocess: %d\tentering critical section.\n", startTime, procNum);
+        fprintf(stderr, "\t%s\tprocess: %d\tentering critical section.\n", buffer, procNum);
 
         //critical_section
         srand(time(NULL));
@@ -158,10 +156,13 @@ int main(int argc, char *argv[]){
         rN = rand()%3;
         sleep(rN);
 
-        time(&timer);
-        tm_info = localtime(&timer);
-        strftime(endTime, 26, "%H:%M:%S", tm_info);
-        fprintf(stderr, "\t%s\tprocess: %d\texiting critical section.\n", endTime, procNum);
+        time_t rawtime;
+			struct tm *info;
+			buffer[80];
+			time( &rawtime );
+			info = localtime( &rawtime );
+			strftime(buffer,80,"%x - %I:%M:%S%p", info);
+        fprintf(stderr, "\t%s\tprocess: %d\texiting critical section.\n", buffer, procNum);
       
         j = (shmPtr->turn + 1) % n;
         while (shmPtr->flag[j] == idle)
