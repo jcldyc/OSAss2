@@ -216,7 +216,7 @@ const int isPalindrome(char * palindromeString){					//Palindrome website refere
 
     // Start from leftmost and rightmost corners of str
     int l = 0;
-    int h = strlen(palindromeString)+1;
+    int h = strlen(palindromeString)-1;
  
     // Keep comparing characters while they are same
     while (h > l)
