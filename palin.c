@@ -104,10 +104,10 @@ int main(int argc, char *argv[]){
 
 			info = localtime( &rawtime );
 
-			strftime(buffer,80,"%x - %I:%M%p", info);
+			strftime(buffer,80,"%x - %I:%M:%S%p", info);
 			
 			//printTime();
-            fprintf(stderr, "\t%s \t process: %d\twants to enter the critical section.\n",buffer, procNum);
+            fprintf(stderr, "\t| %s | \t process: %d\twants to enter the critical section.\n",buffer, procNum);
 
             shmPtr->flag[procNum] = want_in; // Raise my flag
             j = shmPtr->turn; // Set local variable
