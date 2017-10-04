@@ -150,8 +150,9 @@ int main(int argc, char *argv[]){
         sleep(rN);
 
         FILE * filePtr;
+		
 
-        if(isPalindrome(possiblePalindrome)){
+        if(isPalindrome(possiblePalindrome, 0, strlen(possiblePalindrome) -1)){
             filePtr = fopen("palin.out","a");
 
         }
@@ -194,7 +195,7 @@ int main(int argc, char *argv[]){
 	//returns 1 or 2; 1= true & 2 = false
 	//ref:  http://www.geeksforgeeks.org/c-program-check-given-string-palindrome/
 
-const int isPalindrome(char *str){
+/* const int isPalindrome(char *str){
     // Start from leftmost and rightmost corners of str
     int l = 0;
     int h = strlen(str) - 1;
@@ -209,7 +210,26 @@ const int isPalindrome(char *str){
     }
 	return 1;						//IS a pal
 }
-
+ */
+ 
+ 
+ /*
+ * Function to check whether a string is palindrome or not
+ */
+ int isPalindrome(char *inputString, int leftIndex, int rightIndex){
+     /* Input Validation */
+     if(NULL == inputString || leftIndex < 0 || rightIndex < 0){
+         printf("Invalid Input");
+         return 0;
+     }
+     /* Recursion termination condition */
+     if(leftIndex >= rightIndex)
+         return 1;
+     if(inputString[leftIndex] == inputString[rightIndex]){
+         return isPalindrome(inputString, leftIndex + 1, rightIndex - 1);
+     }
+     return 0;
+ }
 
 //detaches shared memory 
 void exitfunc(int sig){	
