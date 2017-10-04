@@ -8,7 +8,6 @@
 #include <time.h>
 
 const int isPalindrome(char * palindromeString);
-const void writeToFile(int isAPalindrome);
 void exitfuncCtrlC(int sig);
 void exitfunc(int sig);
 void exitfuncAlarm(int sig);
@@ -48,7 +47,7 @@ int main(int argc, char *argv[]){
     
 
     int id;
-    int key = 6644;
+    int key = 3699;
 
 
 
@@ -69,9 +68,9 @@ int main(int argc, char *argv[]){
     }
 
 
-    //string to int
-    int processIndex = atoi(argv[1]);;
-    int palindromeIndex = atoi(argv[2]); 
+    //Takes the arguments passed into ./palin and converts them from strings to ints
+    int procNum = atoi(argv[1]);;
+    int palNum = atoi(argv[2]); 
 
     time_t timer;
     struct tm* tm_info;
@@ -83,23 +82,23 @@ int main(int argc, char *argv[]){
     //code to enter critical section
     int j;
     int n = 19;
-    int currentPalindromeIndex = palindromeIndex;
+    int currentpalNum = palNum;
     int isAPalindrome;
     
     for (int i = 0; i < 5; ++i)
     {
         
-        char myString[256];
+        char possiblePalindrome[256];
         char startTime[26];
         char endTime[26];
         char wantInTime[26];
 
     
 
-        if (currentPalindromeIndex < 50){
-            strncpy(myString, shmPtr->palindromeList[currentPalindromeIndex],256);
-            strtok(myString, "\n");
-            currentPalindromeIndex = currentPalindromeIndex + n;
+        if (currentpalNum < 50){
+            strncpy(possiblePalindrome, shmPtr->palindromeList[currentpalNum],256);
+            strtok(possiblePalindrome, "\n");
+            currentpalNum = currentpalNum + n;
         }
         else{
             return 0;
@@ -110,7 +109,7 @@ int main(int argc, char *argv[]){
         
 
         //check if it is a palindrome
-        if(isPalindrome(myString) != 0){
+        if(isPalindrome(possiblePalindrome) != 0){
             isAPalindrome = 1;
 
         }
@@ -123,32 +122,32 @@ int main(int argc, char *argv[]){
             tm_info = localtime(&timer);
 
             strftime(wantInTime, 26, "%Y-%m-%d %H:%M:%S", tm_info);
-            fprintf(stderr, "\t%s\tprocess: %d\twants to enter the critical section.\n", wantInTime, processIndex);
+            fprintf(stderr, "\t%s\tprocess: %d\twants to enter the critical section.\n", wantInTime, procNum);
 
-            shmPtr->flag[processIndex] = want_in; // Raise my flag
+            shmPtr->flag[procNum] = want_in; // Raise my flag
             j = shmPtr->turn; // Set local variable
-            while ( j != processIndex )                                            //while j != the process' constant
+            while ( j != procNum )                                            //while j != the process' constant
                 j = ( shmPtr->flag[j] != idle ) ? shmPtr->turn : ( j + 1 ) % n;         //if the current process whose turn it is idle set j to (j+1) %n
 
             // Declare intention to enter critical section
 
 
-            shmPtr->flag[processIndex] = in_cs;
+            shmPtr->flag[procNum] = in_cs;
 
 
 
             // Check that no one else is in critical section
 
             for ( j = 0; j < n; j++ ){
-                if ( ( j != processIndex ) && ( shmPtr->flag[j] == in_cs ) ){
+                if ( ( j != procNum ) && ( shmPtr->flag[j] == in_cs ) ){
                     break;
                 }
             }
-        } while (( j < n ) || ( shmPtr->turn != processIndex && shmPtr->flag[shmPtr->turn] != idle ));
+        } while (( j < n ) || ( shmPtr->turn != procNum && shmPtr->flag[shmPtr->turn] != idle ));
 
         // Assign turn to self and enter critical section
 
-        shmPtr->turn = processIndex;
+        shmPtr->turn = procNum;
 
         
 
@@ -156,7 +155,7 @@ int main(int argc, char *argv[]){
         tm_info = localtime(&timer);
 
         strftime(startTime, 26, "%Y-%m-%d %H:%M:%S", tm_info);
-        fprintf(stderr, "\t%s\tprocess: %d\tentering critical section.\n", startTime, processIndex);
+        fprintf(stderr, "\t%s\tprocess: %d\tentering critical section.\n", startTime, procNum);
 
         //critical_section
         srand(time(NULL));
@@ -175,7 +174,7 @@ int main(int argc, char *argv[]){
             filePtr = fopen("nopalin.out","a");
         }
 
-        fprintf(filePtr, "%ld %d %s\n", (long)getpid(), currentPalindromeIndex-n+1, myString);
+        fprintf(filePtr, "%ld %d %s\n", (long)getpid(), currentpalNum-n+1, possiblePalindrome);
 
         fclose(filePtr);
 
@@ -189,7 +188,7 @@ int main(int argc, char *argv[]){
         time(&timer);
         tm_info = localtime(&timer);
         strftime(endTime, 26, "%Y-%m-%d %H:%M:%S", tm_info);
-        fprintf(stderr, "\t%s\tprocess: %d\texiting critical section.\n", endTime, processIndex);
+        fprintf(stderr, "\t%s\tprocess: %d\texiting critical section.\n", endTime, procNum);
 
         
         j = (shmPtr->turn + 1) % n;
@@ -199,72 +198,39 @@ int main(int argc, char *argv[]){
         // Assign turn to next waiting process; change own flag to idle
 
         shmPtr->turn = j;
-        shmPtr->flag[processIndex] = idle;
+        shmPtr->flag[procNum] = idle;
         
         //done in crit section
 
     }
     
 
-
-
-
-
-
-   
-
     shmdt(shmPtr);
     return 0;
 }
 
 
-const int isPalindrome(char * palindromeString){
 
-
-    int stringLength = strlen(palindromeString);
-
-    char editedString[stringLength+1]; 
-    //strcpy(editedString, palindromeString); 
-
-    int j = 0;
-    for(int i = 0; i < stringLength ;i++){
-        if (isalnum(palindromeString[i])){
-            editedString[j] = tolower(palindromeString[i]);
-            j++;
+	const int isPalindrome(char *str)
+{
+    // Start from leftmost and rightmost corners of str
+    int l = 0;
+    int h = strlen(str) - 1;
+ 
+    // Keep comparing characters while they are same
+    while (h > l)
+    {
+        if (str[l++] != str[h--])
+        {
+            return 0;				//NOT a pal
         }
     }
-    //null terminate new string
-    editedString[j] = '\0';
-
-
-    int editedStringLength = strlen(editedString);
-
-
-    char editedStringReversed[editedStringLength];
-
-    j = editedStringLength - 1;
-    for (int i = 0; i < editedStringLength; ++i){
-        editedStringReversed[i] = editedString[j];
-        j--;
-    }
-    editedStringReversed[editedStringLength] = '\0';
-
-
-
-    if (strcmp(editedString, editedStringReversed) == 0){
-            return 1;
-    }
-    else{
-            return 0;
-    }    
-
-
-
+	return 1;						//IS a pal
 }
 
 
-
-void exitfunc(int sig){
+//detaches shared memory 
+void exitfunc(int sig){	
     shmdt(shmPtr);
     exit(1);
 }
