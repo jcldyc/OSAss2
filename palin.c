@@ -187,6 +187,13 @@ int main(int argc, char *argv[]){
 
 const int isPalindrome(char *str){
     // Start from leftmost and rightmost corners of str
+	
+	int length = strlen(str);
+	for(int i= 0; i<length;i++){
+		if(isalnum(str[i])){
+			str[i] = tolower(str[i]);
+		}
+	}
     int l = 0;
     int h = strlen(str) - 1;
  
