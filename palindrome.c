@@ -10,11 +10,19 @@ int main(int argc, char *argv[]){
 		exit(1);
 	}
 	
-	isPalindrome(argv[1]);
+	
+	char *ptr = &argv[1];
+	isPalindrome(ptr);
+	
 }
 	
 	// A function to check if a string str is palindrome
-void isPalindrome(char str[])
+
+	
+	
+	
+	
+	void isPalindrome(char * str)
 {
     // Start from leftmost and rightmost corners of str
     int l = 0;
