@@ -13,18 +13,19 @@
 void cProcExec(int cIndex, int pIndex);
 void ctrlPlusC(int sig);
 
-typedef struct PalInfo{							
-    char pList[50][256];
-    int turn;
-    enum state flag[];
-} palInfo;
-
-
 //struct used for the multiprocessor solution
 
 enum state {			
  idle, want_in, in_cs 
 };
+
+typedef struct PalInfo{							
+    char pList[50][256];
+    int turn;
+    enum state flag[19];
+} palInfo;
+
+
 
 palInfo shm;
 palInfo *shmPtr;
