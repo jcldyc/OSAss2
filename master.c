@@ -31,12 +31,11 @@ int id;
 SharedData shm;
 SharedData *shmPtr;
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]){
     int i;
 	
 	if(argc !=2){
-		printf("./master must be followed with a file");
+		printf("./master must be followed with a file. \n");
 		exit(1);
 	}
     for (i = 0; i < 19; ++i)
