@@ -221,7 +221,7 @@ const int isPalindrome(char * palindromeString){					//Palindrome website refere
     // Keep comparing characters while they are same
     while (h > l)
     {
-        if (str[l++] != str[h--])
+        if (palindromeString!= palindromeString[h--])
         {
             return 0;				//returns a 0 if it is NOT a palindrome
         }
