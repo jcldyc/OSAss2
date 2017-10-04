@@ -209,7 +209,7 @@ void printTime(){
 	struct tm * timeinfo;
 	time ( &rawtime );
 	timeinfo = localtime ( &rawtime );
-	printf ( "Current local time and date: %s", asctime (timeinfo) );
+	printf ( "%s", asctime (timeinfo) );
 }
 
 
