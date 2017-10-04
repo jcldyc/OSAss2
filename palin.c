@@ -206,7 +206,7 @@ const int isPalindrome(char *str){
 
  
  
- /
+ 
  
  
  
