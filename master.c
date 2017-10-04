@@ -8,135 +8,129 @@
 #include <time.h>
 #include <signal.h>
 
+//prototypes
 
 void childProcessing(int childIndex, int palindromeIndex);
+void ctrlPlusC(int sig);
 
-void exitfuncCtrlC(int sig);
-void exitfuncAlarm(int sig);
+typedef struct PalInfo{							
+    char pList[50][256];
+    int turn;
+    enum state flag[19];
+} palInfo;
 
-enum state {
+//struct used for the multiprocessor solution
+
+enum state {			
  idle, want_in, in_cs 
 };
 
-typedef struct Data{
-    char palindromeList[50][256];
-    int turn;
-    enum state flag[19];
-} SharedData;
-
-
+palInfo shm;
+palInfo *shmPtr;
 pid_t pids[19];
 int n = 19;
 int id;
-SharedData shm;
-SharedData *shmPtr;
+
 
 int main(int argc, char *argv[]){
     int i;
+	int pCount = 0;			//sets the process count to 0 at the beginning
+    int key = 3699;			//this  is the key used to identify the shared memory 
+	 shmPtr = &shm;			//points the shared memory pointer to teh address in shared memory
 	
-	if(argc !=2){
+	//Checks to make sure there is a file argument or if there is too many arguments
+	
+	if(argc < 2){
 		printf("./master must be followed with a file. \n");
 		exit(1);
+	}else if(argc > 2){
+		printf("Too many arguments. \n");
 	}
-    for (i = 0; i < 19; ++i)
-    {
-        pids[i] = -1;
-    }
-
-    int configurableTime = 60;
-
-    if (signal(SIGINT, exitfuncCtrlC) == SIG_ERR) {
-        printf("SIGINT error\n");
-        exit(1);
-    }
-    if (signal(SIGALRM, exitfuncAlarm) == SIG_ERR){
-        printf("SIGALRM error\n");
-    }
-
-
-    alarm(configurableTime);
-    
-    int processesRunning = 0;
-    
-    int palindromeCount = 0;
-
-    int key = 9929;
-
-    FILE* file_ptr = fopen("palin.out", "w");
+	
+	//Creates the files palin.out and nopalin.out and then closes them to use later
+	
+	FILE* file_ptr = fopen("palin.out", "w");
     fclose(file_ptr);
     file_ptr = fopen("nopalin.out", "w");
     fclose(file_ptr);
-
-
-    shmPtr = &shm;
-
-    //reserve space for struct and attach to pointer
-    if ((id = shmget(key,sizeof(shm), IPC_CREAT | 0666)) < 0)
-    {
-        perror("SHMGET");
+	
+	//Opens the the file passed in as an argument: argv[1]
+	
+	FILE* file = fopen(argv[1], "r");
+	
+	//Sets each process id array position to -1
+    for (i = 0; i < 19; ++i){
+        pids[i] = -1;
+    }
+	
+	//checks for user to hit Ctrl + C to exit 
+	
+    if (signal(SIGINT, ctrlPlusC) == SIG_ERR){			
+        printf("SIGINT error\n");
         exit(1);
     }
 
-    if((shmPtr = shmat(id, NULL, 0)) == (SharedData *) -1)
-    {
+    //Reserving memory.  Set's the permissions with  the 0666 argument
+	
+	id = shmget(key,sizeof(shm), IPC_CREAT | 0666);
+    if (id < 0){
+        perror("SHMGET");
+        exit(1);
+    }
+	
+	shmPtr = shmat(id, NULL, 0)
+    if(shmPtr == (palInfo *) -1){
         perror("SHMAT");
         exit(1);
     }
 
-    //attach file
-    FILE* file = fopen(argv[1], "r");
 
-
-    //read file into array
+    //Begin reading from the file with fget and put  into a char array
     char line[256];
     char endChar = '\0';
     i = 0;
     while (fgets(line, sizeof(line), file) && i<50) { 
-        sprintf(shmPtr->palindromeList[i], "%s",line);
+        sprintf(shmPtr->pList[i], "%s",line);
         i++;
     }
     fclose(file);
 
     shmPtr->turn = 0;
     for (i = 0; i < 19; ++i){
-            shmPtr->flag[i] = idle;
+            shmPtr->flag[i] = idle;			//sets that p's flag toidle which is used for multi processes 
     }
 
-    // Spawn 19 children
+    // Create 19 processes from master/main process
+	
     for (i = 0; i < 19; i++) {
       if ((pids[i] = fork()) < 0) {
         perror("fork");
         abort();
       } else if (pids[i] == 0) {
-        //printf("forking process number: %d\n",i+1);
-        childProcessing(i, palindromeCount);
-        printf("error spawning child\n");
+        childProcessing(i, pCount);
+        printf("There was a problem creating the child.\n");
         exit(0);
       }
-      palindromeCount++;
+      pCount++;
     }
 
-    //Wait for children to exit.
+    // Used to wait and see when the children are done and exited,  Decrements n each time it exits the  for and  if loop
+	
     int status;
     pid_t pid;
     while (n > 0) {
-
         pid = wait(&status);
-
-        for (i = 0; i < 19; ++i)
-        {
+        for (i = 0; i < 19; ++i){
             if (pids[i] == pid){
                 pids[i] = -1;
             }
         }
-        //printf("PID %ld exited with status %d.\n", (long)pid, status);
         n--;
     }
 
-    //after all the processes have ran
-    printf("All child processes have ran and exited\n");
-    shmdt(shmPtr);
-    shmctl(id, IPC_RMID, NULL);
+    printf("Child processes have finished.\n");
+    shmdt(shmPtr);					//must detach the shared memory
+    shmctl(id, IPC_RMID, NULL);		//setting the control of the shared memory using the variable id = shmget(key,sizeof(shm), IPC_CREAT | 0666);
     return 0;
 }
 
@@ -169,35 +163,12 @@ void childProcessing(int childIndex, int palindromeIndex){
     exit(127); //error out
 }
 
-void exitfuncAlarm(int sig){
+//used to quit the running program when the user presses Ctrl + C
 
-    fprintf( stderr, "Too much time elapsed. Killing children, if any, and exiting program.\n");
-
-    int i;
-    for (i = 0; i < 19; ++i){
-        if (pids[i] != -1){
-            if (kill(pids[i], SIGUSR1) >= 0){
-                fprintf(stderr, "killed child process %d\n", i+1);
-            }
-
-        }
-    }
-	
-    shmdt(shmPtr);
+void ctrlPlusC(int sig){
+    fprintf( stderr, "Ctrl + C:  GO CRAZY!\n");
+    shmdt(shmPtr);					//detach share mem
     shmctl(id, IPC_RMID, NULL);
-
-    exit(1);
-}
-
-void exitfuncCtrlC(int sig){
-
-
-    sleep(1);
-    fprintf( stderr, "CTRL C caught. Killing children and exiting program.\n");
-
-    shmdt(shmPtr);
-    shmctl(id, IPC_RMID, NULL);
-
     exit(1);
 }
 
