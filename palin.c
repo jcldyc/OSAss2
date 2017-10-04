@@ -152,7 +152,7 @@ int main(int argc, char *argv[]){
         FILE * filePtr;
 		
 
-        if(isPalindrome(possiblePalindrome, 0, strlen(possiblePalindrome) -1)){
+        if(isPalindrome(possiblePalindrome){
             filePtr = fopen("palin.out","a");
 
         }
